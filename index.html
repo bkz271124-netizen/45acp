@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>45ACP | Hall of Fame</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Dancing+Script:wght@700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #020204;
+            color: #ffffff;
+            font-family: 'Space Grotesk', sans-serif;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        #entry-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #020204;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+            cursor: pointer;
+        }
+
+        #entry-overlay.fade-out {
+            opacity: 0 !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+        }
+
+        .entry-text {
+            font-family: 'Cinzel', serif;
+            font-size: 3rem;
+            letter-spacing: 4px;
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(230, 0, 54, 0.6);
+            animation: pulseText 1.5s infinite alternate ease-in-out;
+            user-select: none;
+        }
+
+        @keyframes pulseText {
+            0% {
+                opacity: 0.4;
+                text-shadow: 0 0 10px rgba(230, 0, 54, 0.3);
+                transform: scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                text-shadow: 0 0 30px rgba(230, 0, 54, 0.8), 0 0 50px rgba(230, 0, 54, 0.4);
+                transform: scale(1.05);
+            }
+        }
+
+        .liquid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .liquid-orb {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            filter: blur(100px);
+            mix-blend-mode: screen;
+            opacity: 0.22;
+            animation: floatLiquid 14s infinite alternate ease-in-out;
+        }
+
+        .orb-red {
+            background: #e60036;
+            top: -12%;
+            left: 15%;
+            animation-duration: 12s;
+        }
+
+        .orb-blue {
+            background: #0066ff;
+            bottom: 15%;
+            right: -8%;
+            animation-duration: 16s;
+        }
+
+        .orb-purple {
+            background: #b300ff;
+            top: 35%;
+            left: -12%;
+            animation-duration: 15s;
+        }
+
+        .bg-visuals-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            gap: 40px;
+            padding: 0 40px;
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: -2;
+        }
+
+        .bg-visuals-container img {
+            width: 30vw;
+            height: 100vh;
+            object-fit: cover;
+            position: sticky;
+            top: 0;
+        }
+
+        @keyframes floatLiquid {
+            0% {
+                transform: translateY(0) scale(1) rotate(0deg);
+                border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%;
+            }
+            50% {
+                transform: translateY(50px) translateX(40px) scale(1.15) rotate(180deg);
+                border-radius: 58% 42% 38% 62% / 55% 55% 45% 45%;
+            }
+            100% {
+                transform: translateY(-30px) translateX(-30px) scale(0.90) rotate(360deg);
+                border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%;
+            }
+        }
+
+        .container {
+            max-width: 1260px;
+            margin: 0 auto;
+            padding: 60px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 90px;
+            margin-top: 20px;
+        }
+
+        .top-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 7.5rem;
+            color: #e60036;
+            margin-bottom: -15px;
+            letter-spacing: 4px;
+            text-shadow: 0 0 40px rgba(230, 0, 54, 0.85), 0 0 80px rgba(230, 0, 54, 0.5);
+            display: block;
+        }
+
+        header .tier-title {
+            font-size: 4rem;
+            letter-spacing: 12px;
+            margin-top: 15px;
+            margin-bottom: 35px;
+            text-shadow: 0 0 35px rgba(255, 255, 255, 0.25);
+        }
+
+        .join-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, rgba(230, 0, 54, 0.2), rgba(0, 102, 255, 0.2));
+            color: white;
+            text-decoration: none;
+            padding: 16px 44px;
+            border-radius: 8px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            margin-bottom: 50px;
+        }
+
+        .join-btn:hover {
+            transform: translateY(-3px);
+            background: linear-gradient(135deg, rgba(230, 0, 54, 0.4), rgba(0, 102, 255, 0.4));
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 30px rgba(230, 0, 54, 0.2);
+        }
+
+        .roster-quote {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.4rem;
+            color: rgba(255, 255, 255, 0.75);
+            font-style: italic;
+            letter-spacing: 1px;
+            max-width: 800px;
+            margin: 30px auto 10px auto;
+            line-height: 1.7;
+            position: relative;
+            padding: 0 20px;
+            text-shadow: 0 2px 14px rgba(0, 0, 0, 0.75);
+        }
+
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(230, 0, 54, 0.2), rgba(0, 102, 255, 0.2), transparent);
+            margin: 75px auto;
+            width: 50%;
+        }
+
+        .tier-title {
+            font-family: 'Cinzel', serif;
+            text-align: center;
+            font-size: 2.3rem;
+            font-weight: 800;
+            letter-spacing: 6px;
+            margin-bottom: 45px;
+            color: #ffffff;
+            text-shadow: 0 0 25px rgba(255, 255, 255, 0.12);
+        }
+
+        .vertical-column {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 24px;
+            margin: 0 auto 50px auto;
+            width: 100%;
+        }
+
+        @media (max-width: 1024px) {
+            .bg-visuals-container img {
+                width: 45vw;
+            }
+            .bg-visuals-container img:nth-child(3) {
+                display: none;
+            }
+            .top-title {
+                font-size: 5.8rem;
+            }
+            header .tier-title {
+                font-size: 3rem;
+            }
+        }
+
+        @media (max-width: 680px) {
+            .bg-visuals-container {
+                display: none;
+            }
+            .top-title {
+                font-size: 4.5rem;
+            }
+            header .tier-title {
+                font-size: 2.2rem;
+                letter-spacing: 6px;
+            }
+            .roster-quote {
+                font-size: 1.15rem;
+            }
+        }
+
+        .profile-card {
+            width: 100%;
+            max-width: 470px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 26px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            position: relative;
+            backdrop-filter: blur(18px) saturate(140%);
+            -webkit-backdrop-filter: blur(18px) saturate(140%);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), 
+                        border-color 0.6s cubic-bezier(0.16, 1, 0.3, 1), 
+                        box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                        filter 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                        opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .container:has(.profile-card:hover) .profile-card:not(:hover) {
+            filter: blur(6px);
+            opacity: 0.22;
+            transform: scale(0.96);
+        }
+
+        .profile-card:hover {
+            transform: scale(1.04) translateY(-4px);
+            border-color: rgba(0, 102, 255, 0.45);
+            box-shadow: 0 14px 45px rgba(0, 102, 255, 0.28),
+                        inset 0 0 18px rgba(255, 255, 255, 0.06);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
+        }
+
+        .profile-card:only-child {
+            border-color: rgba(230, 0, 54, 0.3);
+            box-shadow: 0 0 40px rgba(230, 0, 54, 0.25), inset 0 0 20px rgba(230, 0, 54, 0.05);
+            transform: scale(1.03);
+        }
+
+        .profile-card:only-child:hover {
+            border-color: #e60036;
+            box-shadow: 0 0 50px rgba(230, 0, 54, 0.55), inset 0 0 25px rgba(230, 0, 54, 0.15);
+            transform: scale(1.06) translateY(-4px);
+        }
+
+        .avatar-wrapper {
+            position: relative;
+            width: 82px;
+            height: 82px;
+            flex-shrink: 0;
+        }
+
+        .avatar {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 14px;
+            background-color: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .status-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            position: absolute;
+            bottom: -3px;
+            right: -3px;
+            border: 3px solid #020204;
+            background-color: #747f8d;
+        }
+
+        .status-online { background-color: #23a55a; box-shadow: 0 0 10px #23a55a; }
+        .status-idle { background-color: #f0b232; box-shadow: 0 0 10px #f0b232; }
+        .status-dnd { background-color: #f23f43; box-shadow: 0 0 10px #f23f43; }
+        .status-offline { background-color: #747f8d; }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .global-name {
+            font-weight: 700;
+            font-size: 1.25rem;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .username {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.4);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .custom-status {
+            font-size: 0.88rem;
+            color: rgba(0, 102, 255, 0.85);
+            margin-top: 1px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-shadow: 0 0 8px rgba(0, 102, 255, 0.25);
+        }
+
+        .music-player {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 100;
+            background: rgba(2, 2, 4, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 12px;
+            border-radius: 12px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+        }
+
+        .music-btn {
+            background: #e60036;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(230, 0, 54, 0.4);
+        }
+
+        .music-btn:hover {
+            transform: scale(1.08);
+            background: #ff1a4d;
+            box-shadow: 0 0 20px rgba(230, 0, 54, 0.6);
+        }
+
+        .music-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        .track-info {
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+            padding-right: 8px;
+        }
+    
+.status-bar{position:absolute;left:0;top:0;width:6px;height:100%;border-radius:16px 0 0 16px;background:#747f8d;transition:.3s}
+.profile-card.online .status-bar{background:#23a55a;box-shadow:0 0 16px #23a55a}
+.profile-card.idle .status-bar{background:#f0b232;box-shadow:0 0 16px #f0b232}
+.profile-card.dnd .status-bar{background:#f23f43;box-shadow:0 0 16px #f23f43}
+.profile-card.offline .status-bar{background:#747f8d}
+
+</style>
+</head>
+<body>
+
+    <div id="entry-overlay">
+        <div class="entry-text">&gt;-&lt;</div>
+    </div>
+
+    <audio id="bg-audio" loop>
+        <source src="halik.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="music-player">
+        <button class="music-btn" id="audio-toggle">
+            <svg id="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            <svg id="pause-icon" viewBox="0 0 24 24" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+        </button>
+        <div class="track-info">Audio Track</div>
+    </div>
+
+    <div class="liquid-bg">
+        <div class="liquid-orb orb-red"></div>
+        <div class="liquid-orb orb-blue"></div>
+        <div class="liquid-orb orb-purple"></div>
+        <div class="bg-visuals-container">
+            <img src="1000029481.gif" alt="Background Visual 1">
+            <img src="1000029484.gif" alt="Background Visual 2">
+            <img src="1000029485.gif" alt="Background Visual 3">
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <a href="https://discord.gg/45acp" target="_blank" class="join-btn">Join Discord</a>
+            <div class="top-title">Sicario</div>
+            <h1 class="tier-title">CAPTAIN</h1>
+            <p class="roster-quote">"Captain is a roster where Sicario members starts to conquer the world."</p>
+        </header>
+
+        <div class="section-divider"></div>
+
+        <section>
+            <h2 class="tier-title">HOLDER</h2>
+            <div class="vertical-column">
+                <div class="profile-card" data-user-id="1355792420994027583">
+                    <div class="status-bar"></div>
+                    <div class="avatar-wrapper">
+                        <img src="" alt="" class="avatar">
+                        <div class="status-dot"></div>
+                    </div>
+                    <div class="user-details">
+                        <div class="global-name">Loading Profile...</div>
+                        <div class="username">@loading</div>
+                        <div class="custom-status"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <section>
+            <h2 class="tier-title">CO-HOLDERS</h2>
+            <div class="vertical-column">
+                <div class="profile-card" data-user-id="1420707860957888562">
+                    <div class="status-bar"></div>
+                    <div class="avatar-wrapper">
+                        <img src="" alt="" class="avatar">
+                        <div class="status-dot"></div>
+                    </div>
+                    <div class="user-details">
+                        <div class="global-name">Loading Profile...</div>
+                        <div class="username">@loading</div>
+                        <div class="custom-status"></div>
+                    </div>
+                </div>
+                <div class="profile-card" data-user-id="1474827841349882090">
+                    <div class="status-bar"></div>
+                    <div class="avatar-wrapper">
+                        <img src="" alt="" class="avatar">
+                        <div class="status-dot"></div>
+                    </div>
+                    <div class="user-details">
+                        <div class="global-name">Loading Profile...</div>
+                        <div class="username">@loading</div>
+                        <div class="custom-status"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <section>
+            <h2 class="tier-title">BELOVED</h2>
+            <div class="vertical-column">
+                <div class="profile-card" data-user-id="1503930903737667604">
+                    <div class="status-bar"></div>
+                    <div class="avatar-wrapper">
+                        <img src="" alt="" class="avatar">
+                        <div class="status-dot"></div>
+                    </div>
+                    <div class="user-details">
+                        <div class="global-name">Loading Profile...</div>
+                        <div class="username">@loading</div>
+                        <div class="custom-status"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <section>
+            <h2 class="tier-title">EXCLUSIVES</h2>
+            <div class="vertical-column">
+                <div class="profile-card" data-user-id="803656750527807508">
+                    <div class="status-bar"></div>
+                    <div class="avatar-wrapper">
+                        <img src="" alt="" class="avatar">
+                        <div class="status-dot"></div>
+                    </div>
+                    <div class="user-details">
+                        <div class="global-name">Loading Profile...</div>
+                        <div class="username">@loading</div>
+                        <div class="custom-status"></div>
+                    </div>
+                </div>
+                <div class="profile-card" data-user-id="1437719585871757443">
+                    <div class="status-bar"></div>
+                    <div class="avatar-wrapper">
+                        <img src="" alt="" class="avatar">
+                        <div class="status-dot"></div>
+                    </div>
+                    <div class="user-details">
+                        <div class="global-name">Loading Profile...</div>
+                        <div class="username">@loading</div>
+                        <div class="custom-status"></div>
+                    </div>
+                </div>
+                <div class="profile-card" data-user-id="1519031841674498058">
+                    <div class="status-bar"></div>
+                    <div class="avatar-wrapper">
+                        <img src="" alt="" class="avatar">
+                        <div class="status-dot"></div>
+                    </div>
+                    <div class="user-details">
+                        <div class="global-name">Loading Profile...</div>
+                        <div class="username">@loading</div>
+                        <div class="custom-status"></div>
+                    </div>
+                </div>
+                <div class="profile-card" data-user-id="1520812409810325698">
+                    <div class="status-bar"></div>
+                    <div class="avatar-wrapper">
+                        <img src="" alt="" class="avatar">
+                        <div class="status-dot"></div>
+                    </div>
+                    <div class="user-details">
+                        <div class="global-name">Loading Profile...</div>
+                        <div class="username">@loading</div>
+                        <div class="custom-status"></div>
+                    </div>
+                </div>
+                <div class="profile-card" data-user-id="1173976669233623182">
+                    <div class="status-bar"></div>
+                    <div class="avatar-wrapper">
+                        <img src="" alt="" class="avatar">
+                        <div class="status-dot"></div>
+                 </div>
+                    <div class="user-details">
+                        <div class="global-name">Loading Profile...</div>
+                        <div class="username">@loading</div>
+                        <div class="custom-status"></div>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <section>
+            <h2 class="tier-title">MEMBERS</h2>
+            <div class="vertical-column">
+                <div class="profile-card" data-user-id="1503672365693796492">
+                    <div class="status-bar"></div>
+                    <div class="avatar-wrapper">
+                        <img src="" alt="" class="avatar">
+                        <div class="status-dot"></div>
+                    </div>
+                    <div class="user-details">
+                        <div class="global-name">Loading Profile...</div>
+                        <div class="username">@loading</div>
+                        <div class="custom-status"></div>
+                    </div>
+                </div>
+                <div class="profile-card" data-user-id="1497259573101465710">
+                    <div class="status-bar"></div>
+                    <div class="avatar-wrapper">
+                        <img src="" alt="" class="avatar">
+                        <div class="status-dot"></div>
+                    </div>
+                    <div class="user-details">
+                        <div class="global-name">Loading Profile...</div>
+                        <div class="username">@loading</div>
+                        <div class="custom-status"></div>
+                    </div>
+                </div>
+                <div class="profile-card" data-user-id="1229021820292960328">
+                    <div class="status-bar"></div>
+                    <div class="avatar-wrapper">
+                        <img src="" alt="" class="avatar">
+                        <div class="status-dot"></div>
+                    </div>
+                    <div class="user-details">
+                        <div class="global-name">Loading Profile...</div>
+                        <div class="username">@loading</div>
+                        <div class="custom-status"></div>
+                    </div>
+                </div>
+                <div class="profile-card" data-user-id="1505594070565654778">
+                    <div class="status-bar"></div>
+                    <div class="avatar-wrapper">
+                        <img src="" alt="" class="avatar">
+                        <div class="status-dot"></div>
+                    </div>
+                    <div class="user-details">
+                        <div class="global-name">Loading Profile...</div>
+                        <div class="username">@loading</div>
+                        <div class="custom-status"></div>
+                    </div>
+                </div>
+                <div class="profile-card" data-user-id="893677428348686426">
+                    <div class="status-bar"></div>
+                    <div class="avatar-wrapper">
+                        <img src="" alt="" class="avatar">
+                        <div class="status-dot"></div>
+                    </div>
+                    <div class="user-details">
+                        <div class="global-name">Loading Profile...</div>
+                        <div class="username">@loading</div>
+                        <div class="custom-status"></div>
+                    </div>
+                </div>
+                <div class="profile-card" data-user-id="1229481097595981889">
+                    <div class="status-bar"></div>
+                    <div class="avatar-wrapper">
+                        <img src="" alt="" class="avatar">
+                        <div class="status-dot"></div>
+                    </div>
+                    <div class="user-details">
+                        <div class="global-name">Loading Profile...</div>
+                        <div class="username">@loading</div>
+                        <div class="custom-status"></div>
+                    </div>
+                </div>
+                <div class="profile-card" data-user-id="1508473687714828332">
+                    <div class="status-bar"></div>
+                    <div class="avatar-wrapper">
+                        <img src="" alt="" class="avatar">
+                        <div class="status-dot"></div>
+                    </div>
+                    <div class="user-details">
+                        <div class="global-name">Loading Profile...</div>
+                        <div class="username">@loading</div>
+                        <div class="custom-status"></div>
+                    </div>
+                </div>
+                <div class="profile-card" data-user-id="911314215460028458">
+                    <div class="status-bar"></div>
+                    <div class="avatar-wrapper">
+                        <img src="" alt="" class="avatar">
+                        <div class="status-dot"></div>
+                    </div>
+                    <div class="user-details">
+                        <div class="global-name">Loading Profile...</div>
+                        <div class="username">@loading</div>
+                        <div class="custom-status"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        function dismissOverlay() {
+            const overlay = document.getElementById('entry-overlay');
+            if (overlay) {
+                overlay.classList.add('fade-out');
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                }, 500);
+            }
+
+            const audio = document.getElementById('bg-audio');
+            if (audio) {
+                audio.play().catch(() => {});
+            }
+
+            const playIcon = document.getElementById('play-icon');
+            const pauseIcon = document.getElementById('pause-icon');
+            if (playIcon && pauseIcon) {
+                playIcon.style.display = 'none';
+                pauseIcon.style.display = 'block';
+            }
+        }
+
+        async function fetchLanyardData(userId, cardElement) {
+            if (!userId) return;
+            
+            const avatarImg = cardElement.querySelector('.avatar');
+            const globalNameEl = cardElement.querySelector('.global-name');
+            const usernameEl = cardElement.querySelector('.username');
+            const statusDot = cardElement.querySelector('.status-dot');
+            const statusTextEl = cardElement.querySelector('.custom-status');
+
+            try {
+                const response = await fetch(`https://api.lanyard.rest/v1/users/${userId}`);
+                const json = await response.json();
+                
+                if (json.success && json.data) {
+                    const data = json.data;
+                    const user = data.discord_user;
+                    
+                    const isAnimated = user.avatar && user.avatar.startsWith('a_');
+                    const avatarUrl = user.avatar 
+                        ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${isAnimated ? 'gif' : 'png'}?size=256`
+                        : `https://cdn.discordapp.com/embed/avatars/${user.discriminator === '0' ? Number(BigInt(user.id) >> 22n) % 6 : parseInt(user.discriminator) % 5}.png`;
+                    
+                    avatarImg.src = avatarUrl;
+                    avatarImg.alt = user.username;
+                    
+                    globalNameEl.textContent = user.global_name || user.username;
+                    usernameEl.textContent = `@${user.username}`;
+                    
+                    statusDot.className = 'status-dot'; 
+                    statusDot.classList.add(`status-${data.discord_status}`);
+                    cardElement.classList.remove('online','idle','dnd','offline');
+                    cardElement.classList.add(data.discord_status);
+
+                    if (data.activities && data.activities.length > 0) {
+                        const customStatus = data.activities.find(act => act.type === 4);
+                        if (customStatus && customStatus.state) {
+                            statusTextEl.textContent = customStatus.state;
+                        } else {
+                            const gamingAct = data.activities.find(act => act.type === 0);
+                            statusTextEl.textContent = gamingAct ? `Playing ${gamingAct.name}` : '';
+                        }
+                    } else {
+                        statusTextEl.textContent = '';
+                    }
+                } else {
+                    handleFetchError(userId, cardElement);
+                }
+            } catch (error) {
+                console.error(error);
+                handleFetchError(userId, cardElement);
+            }
+        }
+
+        function handleFetchError(userId, cardElement) {
+            const avatarImg = cardElement.querySelector('.avatar');
+            const globalNameEl = cardElement.querySelector('.global-name');
+            const usernameEl = cardElement.querySelector('.username');
+            const statusDot = cardElement.querySelector('.status-dot');
+            const statusTextEl = cardElement.querySelector('.custom-status');
+
+            let calculatedIndex = 0;
+            try {
+                calculatedIndex = Number(BigInt(userId) >> 22n) % 6;
+            } catch(e) {}
+
+            avatarImg.src = `https://cdn.discordapp.com/embed/avatars/${calculatedIndex}.png`;
+            globalNameEl.textContent = "Offline User";
+            usernameEl.textContent = `@id_${userId.substring(0, 5)}`;
+            statusDot.className = 'status-dot status-offline';
+            statusTextEl.textContent = 'Status Unlinked';
+        }
+
+        const overlay = document.getElementById('entry-overlay');
+        if (overlay) {
+            overlay.addEventListener('click', dismissOverlay);
+        }
+
+        const cards = document.querySelectorAll('.profile-card');
+        cards.forEach(card => {
+            const userId = card.getAttribute('data-user-id');
+            if (userId) {
+                fetchLanyardData(userId, card);
+            }
+        });
+
+        const audio = document.getElementById('bg-audio');
+        const audioToggle = document.getElementById('audio-toggle');
+        const playIcon = document.getElementById('play-icon');
+        const pauseIcon = document.getElementById('pause-icon');
+
+        if (audioToggle && audio && playIcon && pauseIcon) {
+            audioToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (audio.paused) {
+                    audio.play().catch(() => {});
+                    playIcon.style.display = 'none';
+                    pauseIcon.style.display = 'block';
+                } else {
+                    audio.pause();
+                    playIcon.style.display = 'block';
+                    pauseIcon.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
